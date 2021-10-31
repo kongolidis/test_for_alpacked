@@ -11,7 +11,7 @@ env:
 on:
   push:
     branches: 
-      - test
+      - main
 
 jobs:
   static-website-generation:
