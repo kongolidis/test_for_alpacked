@@ -5,9 +5,10 @@
 #------------------------
 name: CICD-Action
 env:
-  BUCKET_NAME : "test-static-site"
+  BUCKET_NAME : "test-alpacked-sashay"
   AWS_REGION  : "us-east-1"
   DEPLOY_DIR_NAME : "public"
+  POLICY_FILE_NAME : "s3pollicy.json"
 on:
   push:
     branches: 
@@ -57,9 +58,9 @@ jobs:
           then 
           aws s3 mb s3://${{env.BUCKET_NAME}}
           aws s3api put-public-access-block \
-          --bucket test-alpacked-sashay \
+          --bucket ${{env.BUCKET_NAME}} \
           --public-access-block-configuration "BlockPublicAcls=false,IgnorePublicAcls=false,BlockPublicPolicy=false,RestrictPublicBuckets=false"
-          aws s3api put-bucket-policy  --bucket test-alpacked-sashay --policy file://s3pollicy.json
+          aws s3api put-bucket-policy  --bucket test-alpacked-sashay --policy file://${{env.POLICY_FILE_NAME}}
           fi
       - name: Copy deploy packeg to S3 bucket
         run: aws s3 cp ${{env.DEPLOY_DIR_NAME}}/* s3://${{env.BUCKET_NAME}}/ 
