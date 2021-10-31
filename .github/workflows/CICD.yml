@@ -19,12 +19,16 @@ jobs:
       - uses: actions/checkout@v2
 
 
-      - name: Install npm, run setup and build static site
-        run: |
-          pwd
-          npm install
-          npm i gatsby-cli
-          npm run setup -- --spaceId=${{secrets.CONTENTFUL_SPACE_ID}} --managementToken=${{secrets.CONTENTFUL_PERSONAL_AT}} --accessToken=${{secrets.CONTENT_DELIVERY_API_AT}}
-          gatsby build
-          ls -alF
+      - name: Checking of path
+        run: pwd
+      - name: Installing npm
+        run: npm install
+      - name: Installing gatsby-cli
+        run: npm i gatsby-cli
+      - name: Setup by CONTENTFUL
+        run: npm run setup -- --spaceId=${{secrets.CONTENTFUL_SPACE_ID}} --managementToken=${{secrets.CONTENTFUL_PERSONAL_AT}} --accessToken=${{secrets.CONTENT_DELIVERY_API_AT}}
+      - name: Building
+        run: gatsby build
+      - name: checking the ./public dir
+        run: ls -alF
           
