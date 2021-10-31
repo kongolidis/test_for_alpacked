@@ -5,7 +5,7 @@
 #------------------------
 name: CICD-Action
 env:
-  BUCKET_NAME="${{ github.sha }}"
+  BUCKET_NAME : "${{ github.sha }}"
 
 on:
   push:
