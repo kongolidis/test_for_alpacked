@@ -1,0 +1,29 @@
+# -----------------------
+#Github Action 
+#
+#Oleksandr Yurik
+#------------------------
+name: CICD-Action
+env:
+  BUCKET_NAME="${{ github.sha }}"
+
+on:
+  push:
+    branches: 
+      -main
+
+jobs:
+  static-website-generation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install npm, run setup and build static site
+        run: |
+          pwd
+          npm install
+          npm i gatsby-cli
+          npm run setup -- --spaceId=${{secrets.CONTENTFUL_SPACE_ID}} --managementToken=${{secrets.CONTENTFUL_PERSONAL_AT}} --accessToken=${{secrets.CONTENT_DELIVERY_API_AT}}
+          gatsby build
+          ls -alF
+          
