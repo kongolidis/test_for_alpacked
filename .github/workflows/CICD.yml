@@ -24,7 +24,8 @@ jobs:
             cd alpacked-test-assignment-master/
             pwd
             npm install
-            npm i gatsby-cli
+            npm install gatsby-cli
+            npm config set prefix /usr/local
             ls -alF
             npm run setup -- --spaceId=${{secrets.CONTENTFUL_SPACE_ID}} --managementToken=${{secrets.CONTENTFUL_PERSONAL_AT}} --accessToken=${{secrets.CONTENT_DELIVERY_API_AT}}
             gatsby build
