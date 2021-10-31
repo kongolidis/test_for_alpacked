@@ -67,6 +67,11 @@ jobs:
       - name: Copy deploy packeg to S3 bucket
         run: aws s3 cp ${{env.DEPLOY_DIR_NAME}}/ s3://${{env.BUCKET_NAME}}/ --recursive
 
-     # - name: Checking CloudFront for existing
-    #    run: |
-            
+      - name: Checking CloudFront for existing
+        run: |
+          if [ `aws cloudfront list-distributions | wc -l` -eq 0 ] 
+          then
+          aws cloudfront create-distribution \
+          --origin-domain-name ${{env.BUCKET_NAME}}.s3.amazonaws.com \
+          --default-root-object index.html
+          fi  
