@@ -5,12 +5,13 @@
 #------------------------
 name: CICD-Action
 env:
-  BUCKET_NAME : "${{ github.sha }}"
-
+  BUCKET_NAME : "test-static-site"
+  AWS_REGION  : "us-east-1"
+  DEPLOY_DIR_NAME : "public"
 on:
   push:
     branches: 
-      - main
+      - test
 
 jobs:
   static-website-generation:
@@ -39,4 +40,30 @@ jobs:
         run: gatsby build
             
       - name: Checking list of files
-        run: ls -alF
+        run: ls public
+
+
+        
+      - name: Configure AWS Creds 
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id : ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key : ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{env.AWS_REGION}}
+          
+      - name: Check bucket for existing
+        run: |
+          if [ `aws s3 ls | grep ${{env.BUCKET_NAME}} | wc -l` -eq 0 ] 
+          then 
+          aws s3 mb s3://${{env.BUCKET_NAME}}
+          aws s3api put-public-access-block \
+          --bucket test-alpacked-sashay \
+          --public-access-block-configuration "BlockPublicAcls=false,IgnorePublicAcls=false,BlockPublicPolicy=false,RestrictPublicBuckets=false"
+          aws s3api put-bucket-policy  --bucket test-alpacked-sashay --policy file://s3pollicy.json
+          fi
+      - name: Copy deploy packeg to S3 bucket
+        run: aws s3 cp ${{env.DEPLOY_DIR_NAME}}/* s3://${{env.BUCKET_NAME}}/ 
+
+     # - name: Checking CloudFront for existing
+    #    run: |
+            
