@@ -61,9 +61,11 @@ jobs:
           --bucket ${{env.BUCKET_NAME}} \
           --public-access-block-configuration "BlockPublicAcls=false,IgnorePublicAcls=false,BlockPublicPolicy=false,RestrictPublicBuckets=false"
           aws s3api put-bucket-policy  --bucket test-alpacked-sashay --policy file://${{env.POLICY_FILE_NAME}}
+          else
+          aws s3 rm s3://${{env.BUCKET_NAME}} --recursive
           fi
       - name: Copy deploy packeg to S3 bucket
-        run: aws s3 cp ${{env.DEPLOY_DIR_NAME}}/* s3://${{env.BUCKET_NAME}}/ 
+        run: aws s3 cp ${{env.DEPLOY_DIR_NAME}}/ s3://${{env.BUCKET_NAME}}/ --recursive
 
      # - name: Checking CloudFront for existing
     #    run: |
