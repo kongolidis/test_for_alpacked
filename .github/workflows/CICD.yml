@@ -23,22 +23,9 @@ jobs:
         run: |
             cd alpacked-test-assignment-master/
             pwd
-        
-      - name: Installing npm
-        run: npm install
-        
-      - name: Installing gatsby-cli
-        run: npm i gatsby-cli
-        
-      - name: checking the ./public dir
-        run: ls -alF
-        
-      - name: Setup by CONTENTFUL
-        run: npm run setup -- --spaceId=${{secrets.CONTENTFUL_SPACE_ID}} --managementToken=${{secrets.CONTENTFUL_PERSONAL_AT}} --accessToken=${{secrets.CONTENT_DELIVERY_API_AT}}
-     
-      - name: Building
-        run: gatsby build
-        
-      - name: checking the ./public dir
-        run: ls -alF
-          
+            npm install
+            npm i gatsby-cli
+            ls -alF
+            npm run setup -- --spaceId=${{secrets.CONTENTFUL_SPACE_ID}} --managementToken=${{secrets.CONTENTFUL_PERSONAL_AT}} --accessToken=${{secrets.CONTENT_DELIVERY_API_AT}}
+            gatsby build
+            ls -alF
