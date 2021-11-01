@@ -54,7 +54,7 @@ jobs:
           
       - name: Check bucket for existing
         run: |
-          if [ `aws s3 ls | grep ${{env.BUCKET_NAME}} | wc -l` -eq 0 ] 
+          if [ `aws s3 ls | grep ${{env.BUCKET_NAME}} | wc -l` -ne 0 ] 
           then 
           aws s3 mb s3://${{env.BUCKET_NAME}}
           aws s3api put-public-access-block \
@@ -71,11 +71,9 @@ jobs:
         run: |
           if [ `aws cloudfront list-distributions | wc -l` -eq 0 ] 
           then
+          aws cloudfront delete-distribution \
+          --distribution-id=`aws cloudfront list-distributions | grep \"Id\": | head -n 1 | grep -o -E "[A-Z0-9]{14}"` \
+          fi
           aws cloudfront create-distribution \
           --origin-domain-name ${{env.BUCKET_NAME}}.s3.us-east-1.amazonaws.com \
           --default-root-object index.html
-          else
-          aws cloudfront create-invalidation \
-          --distribution-id=`aws cloudfront list-distributions | grep \"Id\": | head -n 1 | grep -o -E "[A-Z0-9]{14}"` \
-          --paths /
-          fi
