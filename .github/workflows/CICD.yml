@@ -12,7 +12,7 @@ env:
 on:
   push:
     branches: 
-      - main
+      - test
 
 jobs:
   static-website-generation:
@@ -69,11 +69,10 @@ jobs:
 
       - name: Checking CloudFront for existing
         run: |
-          if [ `aws cloudfront list-distributions | wc -l` -ne 0 ] 
+          if [ `aws cloudfront list-distributions | wc -l` -eq 0 ] 
           then
-          aws cloudfront delete-distribution \
-          --distribution-id=`aws cloudfront list-distributions | grep \"Id\": | head -n 1 | grep -o -E "[A-Z0-9]{14}"` \
-          fi
           aws cloudfront create-distribution \
           --origin-domain-name ${{env.BUCKET_NAME}}.s3.us-east-1.amazonaws.com \
           --default-root-object index.html
+          fi
+          
