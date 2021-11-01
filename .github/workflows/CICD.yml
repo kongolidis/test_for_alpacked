@@ -12,7 +12,7 @@ env:
 on:
   push:
     branches: 
-      - main
+      - test
 
 jobs:
   static-website-generation:
@@ -38,7 +38,11 @@ jobs:
         run: npm run setup -- --spaceId=${{secrets.CONTENTFUL_SPACE_ID}} --managementToken=${{secrets.CONTENTFUL_PERSONAL_AT}} --accessToken=${{secrets.CONTENT_DELIVERY_API_AT}}
             
       - name: Building
-        run: gatsby build
+        run: | 
+          gatsby develop
+          sleep 20;
+          kill `ps -aux | grep "gatsby develop" | head -n 1 | awk '{print $2}'`
+          gatsby build
             
       - name: Checking list of files
         run: ls public
