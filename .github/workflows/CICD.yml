@@ -74,4 +74,6 @@ jobs:
           aws cloudfront create-distribution \
           --origin-domain-name ${{env.BUCKET_NAME}}.s3.us-east-1.amazonaws.com \
           --default-root-object index.html
-          fi  
+          else
+          aws cloudfront create-invalidation --distribution-id=`aws cloudfront list-distributions | grep \"Id\": | head -n 1 | grep -o -E "[A-Z0-9]{14}"` --paths /
+          fi
